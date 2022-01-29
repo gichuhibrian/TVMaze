@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { IoClose, IoSearch } from 'react-icons/io5'
 import React, { useEffect, useRef, useState } from 'react';
 
+import MoonLoader from 'react-spinners/MoonLoader'
 import styled from 'styled-components'
 import { useClickOutside } from 'react-click-outside-hook'
 
@@ -13,6 +14,7 @@ const SearchBarContainer = styled(motion.div)`
   background-color: #fff;
   border-radius: 6px;
   box-shadow: 0px 2px 12px 3px rgba(0, 0, 0, 0.14);
+  overflow: hidden;
 `;
 
 const SearchInputContainer = styled.div`
@@ -66,6 +68,29 @@ const CloseIcon = styled(motion.span)`
   }
 `;
 
+const LineSeparator = styled.span`
+  display: flex;
+  min-width: 100%;
+  min-height: 2px;
+  background-color: #d8d8d878;
+`;
+
+const SearchContent = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  overflow-y: auto;
+`;
+
+const LoadingWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 const containerTransition = {
   type: 'spring',
   damping: 22,
@@ -129,6 +154,12 @@ export const SearchBar = ({}) => {
           </CloseIcon>)}
         </AnimatePresence>
       </SearchInputContainer>
+      <LineSeparator />
+      <SearchContent>
+        <LoadingWrapper>
+          <MoonLoader loading color="#000" size={20}/>
+        </LoadingWrapper>
+      </SearchContent>
     </SearchBarContainer>
   )
 };
