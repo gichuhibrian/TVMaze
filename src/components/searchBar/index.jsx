@@ -7,16 +7,16 @@ import styled from 'styled-components'
 import { useClickOutside } from 'react-click-outside-hook'
 import { useDebounce } from '../../hooks/debounceHook'
 import axios from 'axios'
+import TvShow from '../tvShow'
 
 const SearchBarContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
-  width: 34em;
+  width: 36em;
   height: 3.8em;
   background-color: #fff;
   border-radius: 6px;
   box-shadow: 0px 2px 12px 3px rgba(0, 0, 0, 0.14);
-  overflow: hidden;
 `;
 
 const SearchInputContainer = styled.div`
@@ -49,6 +49,7 @@ const SearchInput = styled.input`
     transition: all 250ms ease-in-out;
   }
 `;
+
 const SearchIcon = styled.span`
   color: #bebebe;
   font-size: 27px;
@@ -60,11 +61,10 @@ const SearchIcon = styled.span`
 const CloseIcon = styled(motion.span)`
   color: #bebebe;
   font-size: 23px;
-  margin-right: 30px;
   vertical-align: middle;
   transition: all 200ms ease-in-out;
+  margin-right: 30px;
   cursor: pointer;
-
   &:hover {
     color: #dfdfdf;
   }
@@ -78,7 +78,7 @@ const LineSeparator = styled.span`
 `;
 
 const SearchContent = styled.div`
-  width: 100%;
+  width: 94.5%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -101,7 +101,7 @@ const containerTransition = {
 
 const containerVariants = {
   expanded: {
-    height: '20em',
+    height: '30em',
   },
   collapsed: {
     height: '3.8em'
@@ -113,7 +113,10 @@ export const SearchBar = ({}) => {
   const [parentRef, isClickedOutside] = useClickOutside()
   const [searchQuery, setSearchQuery ] = useState("")
   const [isLoading, setLoading] = useState(false)
+  const [tvShows, setTvShows] = useState([])
   const inputRef = useRef()
+
+  const isEmpty = !tvShows || tvShows.length === 0;
 
   const changeHandler = (e) => {
     e.preventDefault();
@@ -128,6 +131,7 @@ export const SearchBar = ({}) => {
     setExpanded(false)
     setSearchQuery("")
     setLoading(false)
+    setTvShows([])
     if(inputRef.current) inputRef.current.value = ""
   }
 
@@ -137,32 +141,25 @@ export const SearchBar = ({}) => {
 
   const prepareSearchQuery = (query) => {
     const url = `http://api.tvmaze.com/search/shows?q=${query}`;
-
     return encodeURI(url);
   };
 
   const searchTvShow = async () => {
     if(!searchQuery || searchQuery.trim() === "")
     return;
-
     setLoading(true)
-
     const URL = prepareSearchQuery(searchQuery)
-
     const response = await axios.get(URL).catch((error) => {
       console.log("Error:", error)
     })
-
     if(response) {
       console.log("Response:", response.data)
+      setTvShows(response.data)
     }
-
     setLoading(false)
   }
 
   useDebounce(searchQuery, 500, searchTvShow)
-
-  console.log('value', searchQuery)
 
   return (
     <SearchBarContainer
@@ -198,14 +195,26 @@ export const SearchBar = ({}) => {
           )}
         </AnimatePresence>
       </SearchInputContainer>
-      <LineSeparator />
-      <SearchContent>
+      {isExpanded && <LineSeparator />}
+      {isExpanded && <SearchContent>
         {isLoading && (
           <LoadingWrapper>
           <MoonLoader loading color="#000" size={20}/>
         </LoadingWrapper>
         )}
-      </SearchContent>
+        {!isLoading && !isEmpty && (
+            <>
+              {tvShows.map(({ show }) => (
+                <TvShow
+                  key={show.id}
+                  thumbnailSrc={show.image && show.image.medium}
+                  name={show.name}
+                  rating={show.rating && show.rating.average}
+                />
+              ))}
+            </>
+          )}
+      </SearchContent>}
     </SearchBarContainer>
   )
 };
