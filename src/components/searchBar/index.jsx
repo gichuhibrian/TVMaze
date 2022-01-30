@@ -3,11 +3,11 @@ import { IoClose, IoSearch } from 'react-icons/io5'
 import React, { useEffect, useRef, useState } from 'react';
 
 import MoonLoader from 'react-spinners/MoonLoader'
+import TvShow from '../tvShow'
+import axios from 'axios'
 import styled from 'styled-components'
 import { useClickOutside } from 'react-click-outside-hook'
 import { useDebounce } from '../../hooks/debounceHook'
-import axios from 'axios'
-import TvShow from '../tvShow'
 
 const SearchBarContainer = styled(motion.div)`
   display: flex;
@@ -93,6 +93,15 @@ const LoadingWrapper = styled.div`
   align-items: center;
   justify-content: center;
 `;
+
+const WarningMessage = styled.span`
+  color: #a1a1a1;
+  font-size: 14px;
+  display: flex;
+  align-self: center;
+  justify-self: center;
+`;
+
 const containerTransition = {
   type: 'spring',
   damping: 22,
@@ -114,12 +123,14 @@ export const SearchBar = ({}) => {
   const [searchQuery, setSearchQuery ] = useState("")
   const [isLoading, setLoading] = useState(false)
   const [tvShows, setTvShows] = useState([])
+  const [noTvShows, setNoTvShows] = useState(false);
   const inputRef = useRef()
 
   const isEmpty = !tvShows || tvShows.length === 0;
 
   const changeHandler = (e) => {
     e.preventDefault();
+    if (e.target.value.trim() === "") setNoTvShows(false);
     setSearchQuery(e.target.value)
   }
 
@@ -131,6 +142,7 @@ export const SearchBar = ({}) => {
     setExpanded(false)
     setSearchQuery("")
     setLoading(false)
+    setNoTvShows(false);
     setTvShows([])
     if(inputRef.current) inputRef.current.value = ""
   }
@@ -148,12 +160,13 @@ export const SearchBar = ({}) => {
     if(!searchQuery || searchQuery.trim() === "")
     return;
     setLoading(true)
+    setNoTvShows(false)
     const URL = prepareSearchQuery(searchQuery)
     const response = await axios.get(URL).catch((error) => {
       console.log("Error:", error)
     })
     if(response) {
-      console.log("Response:", response.data)
+      if (response.data && response.data.length === 0) setNoTvShows(true);
       setTvShows(response.data)
     }
     setLoading(false)
@@ -202,6 +215,16 @@ export const SearchBar = ({}) => {
           <MoonLoader loading color="#000" size={20}/>
         </LoadingWrapper>
         )}
+        {!isLoading && isEmpty && !noTvShows && (
+            <LoadingWrapper>
+              <WarningMessage>Start typing to Search</WarningMessage>
+            </LoadingWrapper>
+          )}
+          {!isLoading && noTvShows && (
+            <LoadingWrapper>
+              <WarningMessage>No Tv Shows or Series found!</WarningMessage>
+            </LoadingWrapper>
+          )}
         {!isLoading && !isEmpty && (
             <>
               {tvShows.map(({ show }) => (
