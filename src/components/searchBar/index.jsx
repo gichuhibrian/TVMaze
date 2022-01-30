@@ -5,6 +5,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import MoonLoader from 'react-spinners/MoonLoader'
 import styled from 'styled-components'
 import { useClickOutside } from 'react-click-outside-hook'
+import { useDebounce } from '../../hooks/debounceHook'
+import axios from 'axios'
 
 const SearchBarContainer = styled(motion.div)`
   display: flex;
@@ -109,7 +111,14 @@ const containerVariants = {
 export const SearchBar = ({}) => {
   const [isExpanded, setExpanded ] = useState(false)
   const [parentRef, isClickedOutside] = useClickOutside()
+  const [searchQuery, setSearchQuery ] = useState("")
+  const [isLoading, setLoading] = useState(false)
   const inputRef = useRef()
+
+  const changeHandler = (e) => {
+    e.preventDefault();
+    setSearchQuery(e.target.value)
+  }
 
   const expandContainer = () => {
     setExpanded(true)
@@ -117,12 +126,43 @@ export const SearchBar = ({}) => {
 
   const collapseContainer = () => {
     setExpanded(false)
+    setSearchQuery("")
+    setLoading(false)
     if(inputRef.current) inputRef.current.value = ""
   }
 
   useEffect(() => {
     if(isClickedOutside) collapseContainer()
   }, [isClickedOutside])
+
+  const prepareSearchQuery = (query) => {
+    const url = `http://api.tvmaze.com/search/shows?q=${query}`;
+
+    return encodeURI(url);
+  };
+
+  const searchTvShow = async () => {
+    if(!searchQuery || searchQuery.trim() === "")
+    return;
+
+    setLoading(true)
+
+    const URL = prepareSearchQuery(searchQuery)
+
+    const response = await axios.get(URL).catch((error) => {
+      console.log("Error:", error)
+    })
+
+    if(response) {
+      console.log("Response:", response.data)
+    }
+
+    setLoading(false)
+  }
+
+  useDebounce(searchQuery, 500, searchTvShow)
+
+  console.log('value', searchQuery)
 
   return (
     <SearchBarContainer
@@ -139,9 +179,12 @@ export const SearchBar = ({}) => {
           placeholder="Search for Series/Shows"
           onFocus = {expandContainer}
           ref = {inputRef}
+          value = {searchQuery}
+          onChange = {changeHandler}
           />
         <AnimatePresence>
-          {isExpanded && (<CloseIcon
+          {isExpanded && (
+            <CloseIcon
             key="close-icon"
             initial = {{ opacity: 0 }}
             animate = {{ opacity: 1 }}
@@ -151,14 +194,17 @@ export const SearchBar = ({}) => {
             >
 
             <IoClose />
-          </CloseIcon>)}
+          </CloseIcon>
+          )}
         </AnimatePresence>
       </SearchInputContainer>
       <LineSeparator />
       <SearchContent>
-        <LoadingWrapper>
+        {isLoading && (
+          <LoadingWrapper>
           <MoonLoader loading color="#000" size={20}/>
         </LoadingWrapper>
+        )}
       </SearchContent>
     </SearchBarContainer>
   )
