@@ -10,6 +10,7 @@ import Genre from '../genre'
 import Modal from '@mui/material/Modal';
 import axios from 'axios'
 import styled from 'styled-components'
+import Carousel from '../carousel'
 
 const CardContainer = styled.div`
   display: flex;
@@ -57,7 +58,7 @@ export default function ContentModal({children, id}) {
 
 
   const fetchShow = async () => {
-    const { data } = await axios.get(`https://api.tvmaze.com/shows/${id}?embed=cast`).catch((error) => {
+    const { data } = await axios.get(`https://api.tvmaze.com/shows/${id}`).catch((error) => {
       console.log('shows-error', error)
     })
 
@@ -120,6 +121,10 @@ export default function ContentModal({children, id}) {
                   <span className="ContentModal__description">
                     {show.summary}
                   </span>
+
+                  <div>
+                    <Carousel id={id}/>
+                  </div>
                 </div>
               </div>
             </Box>
