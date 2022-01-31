@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
 const TvShowContainer = styled.div`
@@ -42,7 +41,7 @@ const TvShow = ({ thumbnailSrc, name, rating }) => {
   return (
     <TvShowContainer>
       <Thumbnail>
-        <img src={thumbnailSrc} />
+        <img src={thumbnailSrc} alt={name}/>
       </Thumbnail>
       <Name>{name}</Name>
       <Rating>{rating || 'N/A'}</Rating>

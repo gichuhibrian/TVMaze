@@ -19,7 +19,6 @@ const Series = () => {
     })
 
     if(data) {
-      console.log('shows-data', data)
       setTvShows(data)
     }
   }
@@ -30,7 +29,7 @@ const Series = () => {
 
   return (
     <div>
-      <span className="pageTitle">Shows</span>
+      <span className="pageTitle">Discover Tv Shows</span>
       <SeriesContainer>
         {tvShows && tvShows.map((show, index) => (
           <ShowCard

@@ -12,7 +12,7 @@ import { useDebounce } from '../../hooks/debounceHook'
 const SearchBarContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
-  width: 36em;
+  width: 56em;
   height: 3.8em;
   background-color: #fff;
   border-radius: 6px;
@@ -78,7 +78,7 @@ const LineSeparator = styled.span`
 `;
 
 const SearchContent = styled.div`
-  width: 94.5%;
+  width: 96%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -117,7 +117,7 @@ const containerVariants = {
   }
 }
 
-export const SearchBar = ({}) => {
+export const SearchBar = () => {
   const [isExpanded, setExpanded ] = useState(false)
   const [parentRef, isClickedOutside] = useClickOutside()
   const [searchQuery, setSearchQuery ] = useState("")
