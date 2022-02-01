@@ -5,12 +5,13 @@ import { unavailable, unavailableLandscape } from '../../config'
 
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
+import Carousel from '../carousel'
 import Fade from '@mui/material/Fade';
 import Genre from '../genre'
 import Modal from '@mui/material/Modal';
+import ReactCountryFlag from "react-country-flag"
 import axios from 'axios'
 import styled from 'styled-components'
-import Carousel from '../carousel'
 
 const CardContainer = styled.div`
   display: flex;
@@ -33,6 +34,15 @@ const CardContainer = styled.div`
   }
 `;
 
+const ExtraContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const ExtraHeader = styled.h4`
+  margin: 10px;
+`;
 
 const style = {
   position: 'absolute',
@@ -116,7 +126,30 @@ export default function ContentModal({children, id}) {
                     ).substring(0, 4)}
                     )
                   </span>
-                  <Genre genres={show.genres} />
+                  <ExtraContainer>
+                    <ExtraHeader>Genres: </ExtraHeader>
+                    <Genre genres={show.genres} />
+                  </ExtraContainer>
+
+                  <ExtraContainer>
+                    <ExtraHeader>Country:</ExtraHeader>
+                    {show.network && show.network.country && show.network.country.name}
+                    <ReactCountryFlag
+                      className="emojiFlag"
+                      countryCode={show.network && show.network.country && show.network.country.code}
+                      style={{
+                          fontSize: '2em',
+                          lineHeight: '2em',
+                          margin: '5px',
+                      }}
+                      aria-label={show.network && show.network.country && show.network.country.name}
+                    />
+                  </ExtraContainer>
+
+                  <ExtraContainer>
+                    <ExtraHeader>Schedule: </ExtraHeader>
+                    {`${show.schedule && show.schedule.days.map((day) => (day))} at ${show.schedule && show.schedule.time}`}
+                  </ExtraContainer>
 
                   <span className="ContentModal__description">
                     {show.summary}

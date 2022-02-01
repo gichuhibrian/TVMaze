@@ -14,7 +14,6 @@ const Genre = ({genres}) => {
           style={{ margin: 2 }}
           label={genre}
           key={genre}
-          clickable
           size="small"
           color="secondary"
         />
