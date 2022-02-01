@@ -15,7 +15,7 @@ const Genre = ({genres}) => {
           label={genre}
           key={genre}
           size="small"
-          color="secondary"
+          color="primary"
         />
       ))}
     </GenreContainer>

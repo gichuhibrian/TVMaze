@@ -138,9 +138,9 @@ export default function ContentModal({children, id}) {
                       className="emojiFlag"
                       countryCode={show.network && show.network.country && show.network.country.code}
                       style={{
-                          fontSize: '2em',
-                          lineHeight: '2em',
-                          margin: '5px',
+                          fontSize: '1em',
+                          lineHeight: '1em',
+                          margin: '3px',
                       }}
                       aria-label={show.network && show.network.country && show.network.country.name}
                     />
@@ -148,7 +148,12 @@ export default function ContentModal({children, id}) {
 
                   <ExtraContainer>
                     <ExtraHeader>Schedule: </ExtraHeader>
-                    {`${show.schedule && show.schedule.days.map((day) => (day))} at ${show.schedule && show.schedule.time}`}
+                    {`${show.network && show.network.name || show.webChannel && show.webChannel.name} Network on ${show.schedule && show.schedule.days[0] || "--"} at ${show.schedule && show.schedule.time || "--"}`}
+                  </ExtraContainer>
+
+                  <ExtraContainer>
+                    <ExtraHeader>Status: </ExtraHeader>
+                    {show.status === "Ended" ? "Completed" : "Ongoing"}
                   </ExtraContainer>
 
                   <span className="ContentModal__description">
