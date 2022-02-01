@@ -1,11 +1,11 @@
-import './contentModal.css'
+import './peopleModal.css'
 
 import React, {useEffect, useState} from 'react';
 import { unavailable, unavailableLandscape } from '../../config'
 
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
-import Carousel from '../peopleCarousel'
+import ShowsCarousel from '../showsCarousel'
 import Fade from '@mui/material/Fade';
 import Genre from '../genre'
 import Modal from '@mui/material/Modal';
@@ -13,27 +13,20 @@ import ReactCountryFlag from "react-country-flag"
 import axios from 'axios'
 import styled from 'styled-components'
 
-const CardContainer = styled.div`
+const CarouselContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 200px;
-  padding: 5px;
-  margin: 5px 0;
-  background-color: #282c34;
-  border-radius: 10px;
-  position: relative;
-  font-family: "Montserrat", sans-serif;
+  object-fit: contain;
+  padding: 10px;
 
   &:hover {
     background-color: white;
     color: black;
-  }
-
-  @media(max-width:550px) {
-    width: 46%;
+    border-radius: 10px;
+    padding: 5px;
+    cursor: pointer;
   }
 `;
-
 const ExtraContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -60,30 +53,30 @@ const style = {
 };
 
 
-export default function ContentModal({children, id}) {
+export default function PeopleModal({children, id}) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [show, setShow] = useState([])
+  const [person, setPerson] = useState([])
 
 
-  const fetchShow = async () => {
-    const { data } = await axios.get(`https://api.tvmaze.com/shows/${id}`).catch((error) => {
+  const fetchPerson = async () => {
+    const { data } = await axios.get(`https://api.tvmaze.com/people/${id}`).catch((error) => {
       console.log('shows-error', error)
     })
 
     if(data) {
-      setShow(data)
+      setPerson(data)
     }
   }
 
   useEffect(() => {
-    fetchShow()
+    fetchPerson()
   }, [])
 
   return (
     <>
-    <CardContainer onClick={handleOpen}>{children}</CardContainer>
+    <CarouselContainer onClick={handleOpen}>{children}</CarouselContainer>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -96,74 +89,67 @@ export default function ContentModal({children, id}) {
         }}
       >
         <Fade in={open}>
-          {show && (
+          {person && (
             <Box sx={style}>
               <div className="ContentModal">
                 <img
                   src={
-                    show.image
-                      ? show.image.medium
+                    person.image
+                      ? person.image.medium
                       : unavailable
                   }
-                  alt={show.name}
+                  alt={person.name}
                   className="ContentModal__portrait"
                 />
                 <img
                   src={
-                    show.image
-                      ? show.image.original
+                    person.image
+                      ? person.image.original
                       : unavailableLandscape
                   }
-                  alt={show.name}
+                  alt={person.name}
                   className="ContentModal__landscape"
                 />
                 <div className="ContentModal__about">
                   <span className="ContentModal__title">
-                    {show.name} (
+                    {person.name} (
                     {(
-                      show.premiered ||
+                      person.birthday ||
                       "-----"
                     ).substring(0, 4)}
                     )
                   </span>
-                  <ExtraContainer>
-                    <ExtraHeader>Genres: </ExtraHeader>
-                    <Genre genres={show.genres} />
-                  </ExtraContainer>
 
                   <ExtraContainer>
                     <ExtraHeader>Country:</ExtraHeader>
-                    {show.network && show.network.country && show.network.country.name}
+                    {person.country && person.country.name}
                     <ReactCountryFlag
                       className="emojiFlag"
-                      countryCode={show.network && show.network.country && show.network.country.code}
+                      countryCode={person.country && person.country.code}
                       style={{
                           fontSize: '1em',
                           lineHeight: '1em',
                           margin: '3px',
                       }}
-                      aria-label={show.network && show.network.country && show.network.country.name}
+                      aria-label={person.country && person.country.name}
                     />
                   </ExtraContainer>
 
                   <ExtraContainer>
-                    <ExtraHeader>Schedule: </ExtraHeader>
-                    {`${show.network && show.network.name || show.webChannel && show.webChannel.name} Network on ${show.schedule && show.schedule.days[0] || "--"} at ${show.schedule && show.schedule.time || "--"}`}
+                    <ExtraHeader>Gender: </ExtraHeader>
+                    {person.gender}
                   </ExtraContainer>
 
                   <ExtraContainer>
-                    <ExtraHeader>Status: </ExtraHeader>
-                    {show.status === "Ended" ? "Completed" : "Ongoing"}
+                    <ExtraHeader>Age: </ExtraHeader>
+                    {person.birthday}
                   </ExtraContainer>
 
-                  <span className="ContentModal__description">
-                    {show.summary}
-                  </span>
-
                   <div>
-                    <h3>Casts</h3>
-                    <Carousel id={id}/>
+                    <h3>Other Shows</h3>
+                    <ShowsCarousel id={id}/>
                   </div>
+
                 </div>
               </div>
             </Box>

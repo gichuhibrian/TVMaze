@@ -5,31 +5,41 @@ import "react-alice-carousel/lib/alice-carousel.css";
 import { noPicture } from "../../config";
 import "./carousel.css";
 import styled from 'styled-components'
+import ContentModal from '../../components/contentModal'
 
 const CarouselContainer = styled.div`
   display: flex;
   flex-direction: column;
   object-fit: contain;
   padding: 10px;
+
+  &:hover {
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+    padding: 5px;
+    cursor: pointer;
+  }
 `;
 
 
 const handleDragStart = (e) => e.preventDefault();
 
-const Carousel = ({ id }) => {
+const ShowsCarousel = ({ id }) => {
   const [casts, setCast] = useState([]);
 
-  const items = casts.map((cast) => (
-    <CarouselContainer>
-      <img
-        src={cast.person.image ? cast.person.image.medium : noPicture}
-        alt={cast?.person.name}
-        onDragStart={handleDragStart}
-        className="carouselItem__img"
-      />
-      <b className="carouselItem__txt">{cast?.person?.name}</b>
-    </CarouselContainer>
-  ));
+  const items = casts.map((cast) =>
+    (
+      <ContentModal id={cast._embedded.show.id}>
+        <img
+          src={cast._embedded.show.image ? cast._embedded.show.image.medium : noPicture}
+          alt={cast?._embedded?.show?.name}
+          onDragStart={handleDragStart}
+          className="carouselItem__img"
+        />
+      <b className="carouselItem__txt">{cast?._embedded?.show?.name}</b>
+      </ContentModal>
+    ));
 
   const responsive = {
     0: {
@@ -44,7 +54,7 @@ const Carousel = ({ id }) => {
   };
 
   const fetchCast = async () => {
-    const { data } = await axios.get(`https://api.tvmaze.com/shows/${id}/cast`).catch((error) => {
+    const { data } = await axios.get(`https://api.tvmaze.com/people/${id}/castcredits?embed=show`).catch((error) => {
       console.log('shows-error', error)
     })
 
@@ -70,4 +80,4 @@ const Carousel = ({ id }) => {
   );
 };
 
-export default Carousel;
+export default ShowsCarousel;
