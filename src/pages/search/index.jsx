@@ -117,6 +117,18 @@ const Search = () => {
           </ResultContainer>
         )}
 
+        {
+          searchText &&
+          !tvShows &&
+          (<h2>No Shows Found</h2>)
+        }
+
+        {
+          searchText &&
+          !people &&
+          (<h2>No People Found</h2>)
+        }
+
     </div>
 
   );
