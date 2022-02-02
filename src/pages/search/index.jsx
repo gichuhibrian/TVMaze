@@ -6,7 +6,7 @@ import ShowCard from '../../components/showCard'
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import TextField from '@mui/material/TextField';
-import { ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios'
 import styled from 'styled-components'
 
@@ -21,6 +21,15 @@ const ResultContainer = styled.div`
   flex-wrap: wrap;
   justify-content: space-around;
 `;
+
+const darkTheme = createTheme({
+  palette: {
+    type: "dark",
+    primary: {
+      main: "#fff",
+    },
+  },
+});
 
 
 const Search = () => {
@@ -57,9 +66,10 @@ const Search = () => {
 
   return (
     <div>
+      <ThemeProvider theme={darkTheme}>
         <SearchContainer>
           <TextField
-            style={{flex: 1, color: '#fff'}}
+            style={{flex: 1, textColor: '#fff'}}
             id="search"
             label="search"
             variant="filled"
@@ -75,7 +85,7 @@ const Search = () => {
         <Tabs
           value={type}
           indicatorColor='primary'
-          textColor='primary'
+          textColor='#fff'
           onChange={(e, newValue) => {
             setType(newValue)
             CleanUp(newValue)
@@ -85,7 +95,7 @@ const Search = () => {
           <Tab style={{ width: "50%" }} label="Search TV Show" />
           <Tab style={{ width: "50%" }} label="Search People" />
         </Tabs>
-
+      </ThemeProvider>
         {type === 0 ? (
           <ResultContainer>
             {tvShows && tvShows.map(({show}, index) => (
@@ -116,18 +126,6 @@ const Search = () => {
             ))}
           </ResultContainer>
         )}
-
-        {
-          searchText &&
-          !tvShows &&
-          (<h2>No Shows Found</h2>)
-        }
-
-        {
-          searchText &&
-          !people &&
-          (<h2>No People Found</h2>)
-        }
 
     </div>
 

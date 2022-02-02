@@ -7,6 +7,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import TvIcon from '@mui/icons-material/Tv';
 import { useNavigate } from 'react-router-dom'
 
+
 export default function SimpleBottomNavigation() {
   const [value, setValue] = useState(0);
   const navigate = useNavigate()
@@ -17,17 +18,16 @@ export default function SimpleBottomNavigation() {
   }, [value, navigate])
 
   return (
-    <Box sx={{ width: "100%", position: "fixed", bottom: 0, backgroundColor: "#2d313a", zIndex: 100 }}>
       <BottomNavigation
         showLabels
         value={value}
         onChange={(event, newValue) => {
           setValue(newValue);
         }}
+        sx={{width: "100%", position: "fixed", bottom: 0, bgcolor: 'text.secondary', color: 'background.paper', zIndex: 100  }}
       >
-        <BottomNavigationAction label="Search" icon={<SearchIcon />} />
-        <BottomNavigationAction label="All Shows" icon={<TvIcon />} />
+        <BottomNavigationAction style={{ color: "white" }} label="Search" icon={<SearchIcon />} />
+        <BottomNavigationAction style={{ color: "white" }} label="All Shows" icon={<TvIcon />} />
       </BottomNavigation>
-    </Box>
   );
 }
