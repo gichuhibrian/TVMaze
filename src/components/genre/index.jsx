@@ -9,7 +9,7 @@ const GenreContainer = styled.div`
 const Genre = ({genres}) => {
   return (
     <GenreContainer>
-      {genres.map((genre) => (
+      {genres && genres.map((genre) => (
         <Chip
           style={{ margin: 2 }}
           label={genre}

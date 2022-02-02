@@ -6,6 +6,7 @@ import { noPicture } from "../../config";
 import "./carousel.css";
 import styled from 'styled-components'
 import ContentModal from '../../components/contentModal'
+import { useNavigate } from 'react-router-dom'
 
 const CarouselContainer = styled.div`
   display: flex;
@@ -27,10 +28,10 @@ const handleDragStart = (e) => e.preventDefault();
 
 const ShowsCarousel = ({ id }) => {
   const [casts, setCast] = useState([]);
-
+  const navigate = useNavigate()
   const items = casts.map((cast) =>
     (
-      <ContentModal id={cast._embedded.show.id}>
+      <CarouselContainer onClick={() => navigate(`/show/${cast._embedded.show.id}`)}>
         <img
           src={cast._embedded.show.image ? cast._embedded.show.image.medium : noPicture}
           alt={cast?._embedded?.show?.name}
@@ -38,7 +39,7 @@ const ShowsCarousel = ({ id }) => {
           className="carouselItem__img"
         />
       <b className="carouselItem__txt">{cast?._embedded?.show?.name}</b>
-      </ContentModal>
+      </CarouselContainer>
     ));
 
   const responsive = {
@@ -68,15 +69,15 @@ const ShowsCarousel = ({ id }) => {
   }, [])
 
   return (
-    <AliceCarousel
-      mouseTracking
-      infinite
-      disableDotsControls
-      disableButtonsControls
-      responsive={responsive}
-      items={items}
-      autoPlay
-    />
+      <AliceCarousel
+        mouseTracking
+        infinite
+        disableDotsControls
+        disableButtonsControls
+        responsive={responsive}
+        items={items}
+        autoPlay
+      />
   );
 };
 

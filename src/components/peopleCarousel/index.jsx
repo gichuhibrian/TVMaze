@@ -6,6 +6,7 @@ import { noPicture } from "../../config";
 import "./carousel.css";
 import styled from 'styled-components'
 import PeopleModal from '../../components/peopleModal'
+import { useNavigate } from 'react-router-dom'
 
 const CarouselContainer = styled.div`
   display: flex;
@@ -27,9 +28,9 @@ const handleDragStart = (e) => e.preventDefault();
 
 const Carousel = ({ id }) => {
   const [casts, setCast] = useState([]);
-
+  const navigate = useNavigate()
   const items = casts.map((cast) => (
-    <PeopleModal id={cast.person.id}>
+      <CarouselContainer onClick={() => navigate(`/person/${cast.person.id}`)}>
       <img
         src={cast.person.image ? cast.person.image.medium : noPicture}
         alt={cast?.person.name}
@@ -37,7 +38,7 @@ const Carousel = ({ id }) => {
         className="carouselItem__img"
       />
       <b className="carouselItem__txt">{cast?.person?.name}</b>
-    </PeopleModal>
+    </CarouselContainer>
   ));
 
   const responsive = {
