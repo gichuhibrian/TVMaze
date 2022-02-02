@@ -1,20 +1,15 @@
 import './SingleShow.css'
 
-import { IoClose, IoSearch } from 'react-icons/io5'
 import React, { useEffect, useState } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { unavailable, unavailableLandscape } from '../../config'
 
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Carousel from '../../components/peopleCarousel'
 import { DataGrid } from '@mui/x-data-grid';
 import Genre from '../../components/genre'
 import ReactCountryFlag from "react-country-flag"
-import ShowCard from '../../components/showCard'
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
-import TextField from '@mui/material/TextField';
 import axios from 'axios'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
@@ -56,20 +51,6 @@ const ExtraHeader = styled.h4`
   margin: 10px;
 `;
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: "90%",
-  height: "80%",
-  bgcolor: "#39445a",
-  border: '1px solid #282c34',
-  borderRadius: 10,
-  color: "white",
-  boxShadow: 24,
-  p: 4
-};
 
 const darkTheme = createTheme({
   palette: {
@@ -83,51 +64,35 @@ const darkTheme = createTheme({
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
   {
-    field: 'image',
+    field: 'image.medium',
     headerName: 'Image',
-    width: 100,
+    width: 200,
+    valueGetter: (params) =>
+      `${params.row.image.medium}`
   },
-  { field: 'name', headerName: 'Name', width: 130 },
+  { field: 'name', headerName: 'Name', width: 230 },
   { field: 'season', headerName: 'Season', width: 130 },
   {
     field: 'airdate',
     headerName: 'Air Date',
-    width: 90,
+    width: 150,
   },
   {
     field: 'rating',
     headerName: 'Rating',
     width: 90,
+    valueGetter: (params) =>
+      `${params.row.rating.average}`
   },
-  // {
-  //   field: 'fullName',
-  //   headerName: 'Full name',
-  //   description: 'This column has a value getter and is not sortable.',
-  //   sortable: false,
-  //   width: 160,
-  //   valueGetter: (params) =>
-  //     `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  // },
+  {
+    field: 'actions',
+    headerName: 'Action',
+    width: 150,
+  },
 ];
-
-// const rows = [
-//   { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-//   { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-//   { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-//   { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-//   { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-//   { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-//   { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-//   { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-//   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-// ];
-
-
-
 
 const SingleShow = () => {
   const [type, setType] = useState(0)
-  const [searchText, setSearchText] = useState("");
   const [show, setShow] = useState([])
   const [episodes, setEpisodes] = useState([])
   const [gallery, setGallery] = useState([])

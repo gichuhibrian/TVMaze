@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
 
 const SiteHeader = styled.span`
   width: 100%;
@@ -22,8 +23,11 @@ const SiteHeader = styled.span`
   }
 `;
 
-const Header = () => (
-  <SiteHeader onClick={() => {window.scroll(0, 0)}}>Tv-Maze</SiteHeader>
-);
+const Header = () => {
+  const navigate = useNavigate()
 
+return (
+  <SiteHeader onClick={() => navigate('/')}>Tv-Maze</SiteHeader>
+);
+} 
 export default Header;

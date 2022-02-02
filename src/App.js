@@ -40,7 +40,6 @@ function App() {
           </Routes>
         </Container>
       </AppContainer>
-      <SimpleBottomNavigation />
     </Router>
   );
 }

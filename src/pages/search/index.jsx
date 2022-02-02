@@ -1,4 +1,4 @@
-import { IoClose, IoSearch } from 'react-icons/io5'
+import { IoSearch } from 'react-icons/io5'
 import React, { useEffect, useState } from 'react';
 
 import Button from '@mui/material/Button';

@@ -6,6 +6,7 @@ import { unavailable, unavailableLandscape } from '../../config'
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Carousel from '../peopleCarousel'
+import ShowsCarousel from '../showsCarousel'
 import Fade from '@mui/material/Fade';
 import Genre from '../genre'
 import Modal from '@mui/material/Modal';
@@ -68,7 +69,7 @@ export default function ContentModal({children, id}) {
 
 
   const fetchShow = async () => {
-    const { data } = await axios.get(`https://api.tvmaze.com/shows/${id}`).catch((error) => {
+    const { data } = await axios.get(`https://api.tvmaze.com/people/${id}`).catch((error) => {
       console.log('shows-error', error)
     })
 
@@ -162,7 +163,7 @@ export default function ContentModal({children, id}) {
 
                   <div>
                     <h3>Casts</h3>
-                    <Carousel id={id}/>
+                    <ShowsCarousel id={id}/>
                   </div>
                 </div>
               </div>

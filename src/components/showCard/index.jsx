@@ -4,6 +4,29 @@ import styled from 'styled-components'
 import { unavailable } from '../../config'
 import ContentModal from '../contentModal'
 import PeopleModal from '../peopleModal'
+import { useNavigate } from 'react-router-dom'
+
+const CardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  padding: 5px;
+  margin: 5px 0;
+  background-color: #282c34;
+  border-radius: 10px;
+  position: relative;
+  font-family: "Montserrat", sans-serif;
+
+  &:hover {
+    background-color: white;
+    color: black;
+  }
+
+  @media(max-width:550px) {
+    width: 46%;
+  }
+`;
+
 
 const CardTitle = styled.b`
   width: 100%;
@@ -21,9 +44,10 @@ const CardSubTitle = styled.span`
 `;
 
 const ShowCard = ({id, image, name, status, date, rating, type=1}) => {
+  const navigate = useNavigate()
   return (
     <>
-      {type && (<ContentModal id={id}>
+      {type && (<CardContainer onClick={() => navigate(`/show/${id}`)}>
         <Badge badgeContent={rating} color={rating > 7 ? 'primary' : 'secondary'}/>
           <img
             style={{borderRadius: "10px"}}
@@ -34,7 +58,7 @@ const ShowCard = ({id, image, name, status, date, rating, type=1}) => {
       <CardTitle>{name}</CardTitle>
         <CardSubTitle><b>Status</b> {status === "Ended" ? "Completed" : "Ongoing"}</CardSubTitle>
         <CardSubTitle><b>Premiered</b> {date}</CardSubTitle>
-      </ContentModal>)}
+      </CardContainer>)}
       {!type && (<PeopleModal id={id}>
           <img
             style={{borderRadius: "10px"}}

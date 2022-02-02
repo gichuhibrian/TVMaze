@@ -6,6 +6,7 @@ import { unavailable, unavailableLandscape } from '../../config'
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import ShowsCarousel from '../showsCarousel'
+import Carousel from '../peopleCarousel'
 import Fade from '@mui/material/Fade';
 import Genre from '../genre'
 import Modal from '@mui/material/Modal';
@@ -14,10 +15,14 @@ import axios from 'axios'
 import styled from 'styled-components'
 
 const CarouselContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  object-fit: contain;
-  padding: 10px;
+display: flex;
+flex-direction: column;
+padding: 5px;
+margin: 5px 0;
+background-color: #282c34;
+border-radius: 10px;
+position: relative;
+font-family: "Montserrat", sans-serif;
 
   &:hover {
     background-color: white;
@@ -51,6 +56,13 @@ const style = {
   boxShadow: 24,
   p: 4
 };
+
+function calculate_age(dob) {
+    var diff_ms = Date.now() - dob.getTime();
+    var age_dt = new Date(diff_ms);
+
+    return Math.abs(age_dt.getUTCFullYear() - 1970);
+}
 
 
 export default function PeopleModal({children, id}) {
@@ -141,8 +153,13 @@ export default function PeopleModal({children, id}) {
                   </ExtraContainer>
 
                   <ExtraContainer>
-                    <ExtraHeader>Age: </ExtraHeader>
+                    <ExtraHeader>Date of Birth: </ExtraHeader>
                     {person.birthday}
+                  </ExtraContainer>
+
+                  <ExtraContainer>
+                    <ExtraHeader>Age: </ExtraHeader>
+                    {calculate_age(new Date(person.birthday))}
                   </ExtraContainer>
 
                   <div>
