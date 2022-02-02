@@ -85,7 +85,7 @@ const Search = () => {
         <Tabs
           value={type}
           indicatorColor='primary'
-          textColor='#fff'
+          textColor='inherit'
           onChange={(e, newValue) => {
             setType(newValue)
             CleanUp(newValue)

@@ -15,6 +15,7 @@ export default function SimpleBottomNavigation() {
   useEffect(() => {
     if(value === 0) navigate('/')
     else if(value === 1) navigate('/series')
+    else if(value === 2) navigate('/show/1')
   }, [value, navigate])
 
   return (
@@ -28,6 +29,7 @@ export default function SimpleBottomNavigation() {
       >
         <BottomNavigationAction style={{ color: "white" }} label="Search" icon={<SearchIcon />} />
         <BottomNavigationAction style={{ color: "white" }} label="All Shows" icon={<TvIcon />} />
+        <BottomNavigationAction style={{ color: "white" }} label="Show" icon={<SearchIcon />} />
       </BottomNavigation>
   );
 }

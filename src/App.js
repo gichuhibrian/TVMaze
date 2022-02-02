@@ -7,6 +7,8 @@ import Error from './pages/error'
 import Header from './components/header'
 import Search from './pages/search'
 import Series from './pages/series'
+import Show from './pages/single'
+
 import SimpleBottomNavigation from './components/bottomNavigation'
 import styled from 'styled-components'
 
@@ -32,6 +34,7 @@ function App() {
 
             <Route exact path='/' element = {<Search />} />
             <Route path='/series' element = {<Series />} />
+            <Route path='/show/:showId' element = {<Show />} />
             <Route path="*" element = {<Error />} />
 
           </Routes>
