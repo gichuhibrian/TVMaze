@@ -1,3 +1,5 @@
+import './SingleShow.css'
+
 import { IoClose, IoSearch } from 'react-icons/io5'
 import React, { useEffect, useState } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -6,6 +8,7 @@ import { unavailable, unavailableLandscape } from '../../config'
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Carousel from '../../components/peopleCarousel'
+import { DataGrid } from '@mui/x-data-grid';
 import Genre from '../../components/genre'
 import ReactCountryFlag from "react-country-flag"
 import ShowCard from '../../components/showCard'
@@ -15,7 +18,6 @@ import TextField from '@mui/material/TextField';
 import axios from 'axios'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
-import './SingleShow.css'
 
 const CardContainer = styled.div`
   display: flex;
@@ -72,11 +74,56 @@ const darkTheme = createTheme({
   },
 });
 
+const columns = [
+  { field: 'id', headerName: 'ID', width: 70 },
+  {
+    field: 'image',
+    headerName: 'Image',
+    width: 100,
+  },
+  { field: 'name', headerName: 'Name', width: 130 },
+  { field: 'season', headerName: 'Season', width: 130 },
+  {
+    field: 'airdate',
+    headerName: 'Air Date',
+    width: 90,
+  },
+  {
+    field: 'rating',
+    headerName: 'Rating',
+    width: 90,
+  },
+  // {
+  //   field: 'fullName',
+  //   headerName: 'Full name',
+  //   description: 'This column has a value getter and is not sortable.',
+  //   sortable: false,
+  //   width: 160,
+  //   valueGetter: (params) =>
+  //     `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+  // },
+];
+
+// const rows = [
+//   { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
+//   { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
+//   { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
+//   { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
+//   { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
+//   { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
+//   { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
+//   { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
+//   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+// ];
+
+
+
 
 const SingleShow = () => {
   const [type, setType] = useState(0)
   const [searchText, setSearchText] = useState("");
   const [show, setShow] = useState([])
+  const [episodes, setEpisodes] = useState([])
 
   const {showId} = useParams()
 
@@ -90,9 +137,20 @@ const SingleShow = () => {
     }
   };
 
+  const fetchEpisodes = async () => {
+    try {
+      const { data } = await axios.get(`https://api.tvmaze.com/shows/${showId}/episodes`)
+      setEpisodes(data)
+      console.log('episodes', data)
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
 
   useEffect(() => {
     fetchShow();
+    fetchEpisodes();
     // eslint-disable-next-line
   }, [type]);
 
@@ -142,7 +200,10 @@ const SingleShow = () => {
             ).substring(0, 4)}
             )
           </span>
-
+          <ExtraContainer>
+            <ExtraHeader>Genres: </ExtraHeader>
+            <Genre genres={show && show.genres || []} />
+          </ExtraContainer>
 
           <ExtraContainer>
             <ExtraHeader>Country:</ExtraHeader>
@@ -178,7 +239,17 @@ const SingleShow = () => {
             <Carousel id={showId}/>
           </div>
         </div>
-      </div>): "Episode"}
+      </div>): (
+      <div style={{ height: 600, width: '100%', backgroundColor: '#fff' }}>
+        <DataGrid
+          rows={episodes}
+          columns={columns}
+          pageSize={13}
+          rowsPerPageOptions={[5]}
+          checkboxSelection
+        />
+      </div>
+      )}
 
     </div>
 
