@@ -3,6 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { unavailable } from '../../config'
 import ContentModal from '../contentModal'
+import PeopleModal from '../peopleModal'
 
 const CardTitle = styled.b`
   width: 100%;
@@ -19,9 +20,10 @@ const CardSubTitle = styled.span`
   padding-bottom: 3px;
 `;
 
-const ShowCard = ({id, image, name, status, date, rating}) => {
+const ShowCard = ({id, image, name, status, date, rating, type=1}) => {
   return (
-      <ContentModal id={id}>
+    <>
+      {type && (<ContentModal id={id}>
         <Badge badgeContent={rating} color={rating > 7 ? 'primary' : 'secondary'}/>
           <img
             style={{borderRadius: "10px"}}
@@ -32,7 +34,18 @@ const ShowCard = ({id, image, name, status, date, rating}) => {
       <CardTitle>{name}</CardTitle>
         <CardSubTitle><b>Status</b> {status === "Ended" ? "Completed" : "Ongoing"}</CardSubTitle>
         <CardSubTitle><b>Premiered</b> {date}</CardSubTitle>
-      </ContentModal>
+      </ContentModal>)}
+      {!type && (<PeopleModal id={id}>
+          <img
+            style={{borderRadius: "10px"}}
+            src={image ? `${image}` : `${unavailable}`}
+            alt={name}
+          />
+
+      <CardTitle>{name}</CardTitle>
+      </PeopleModal>)}
+    </>
+
   )
 }
 

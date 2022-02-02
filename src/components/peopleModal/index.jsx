@@ -121,7 +121,7 @@ export default function PeopleModal({children, id}) {
                   </span>
 
                   <ExtraContainer>
-                    <ExtraHeader>Country:</ExtraHeader>
+                    <ExtraHeader>Nationality:</ExtraHeader>
                     {person.country && person.country.name}
                     <ReactCountryFlag
                       className="emojiFlag"
