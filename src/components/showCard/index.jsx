@@ -69,7 +69,8 @@ const ShowCard = ({id, image, name, status, date, rating, type=1, country, count
         <CardSubTitle><b>Premiered</b> {date}</CardSubTitle>
       </CardContainer>)}
 
-      {!type && (<PeopleModal id={id}>
+      {!type && (
+        <CardContainer onClick={() => navigate(`/person/${id}`)}>
           <img
             style={{borderRadius: "10px"}}
             src={image ? `${image}` : `${unavailable}`}
@@ -90,7 +91,7 @@ const ShowCard = ({id, image, name, status, date, rating, type=1, country, count
             aria-label={country}
           />
         </CardSubTitle>
-      </PeopleModal>)}
+      </CardContainer>)}
     </>
 
   )
