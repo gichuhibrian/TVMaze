@@ -52,14 +52,15 @@ const Search = () => {
     }
   };
 
-  const CleanUp = (value) => {
-    if(value === 0) setTvShows([])
-    if(value === 1) setPeople([])
+  const CleanUp = () => {
+    setTvShows([])
+    setPeople([])
 
   }
 
   useEffect(() => {
     window.scroll(0, 0);
+    CleanUp();
     fetchSearch();
     // eslint-disable-next-line
   }, [type]);
@@ -76,7 +77,10 @@ const Search = () => {
             onChange={(e) => setSearchText(e.target.value)}
           />
           <Button
-            onClick={fetchSearch}
+            onClick={() => {
+              CleanUp()
+              fetchSearch()
+            }}
             variant='contained'
             style={{marginLeft: 10}}>
             <IoSearch />
@@ -88,7 +92,7 @@ const Search = () => {
           textColor='inherit'
           onChange={(e, newValue) => {
             setType(newValue)
-            CleanUp(newValue)
+            CleanUp()
           }}
           style={{paddingBottom: 5}}
         >
@@ -118,9 +122,9 @@ const Search = () => {
                 id={person.id}
                 image={person.image && person.image.medium}
                 name={person.name}
-                status=""
-                date=""
-                rating=""
+                date={person.birthday}
+                country={person.country && person.country.name}
+                countryCode={person.country && person.country.code}
                 type={0}
               />
             ))}

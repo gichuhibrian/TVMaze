@@ -5,6 +5,8 @@ import { unavailable } from '../../config'
 import ContentModal from '../contentModal'
 import PeopleModal from '../peopleModal'
 import { useNavigate } from 'react-router-dom'
+import ReactCountryFlag from "react-country-flag"
+
 
 const CardContainer = styled.div`
   display: flex;
@@ -43,7 +45,14 @@ const CardSubTitle = styled.span`
   padding-bottom: 3px;
 `;
 
-const ShowCard = ({id, image, name, status, date, rating, type=1}) => {
+function calculate_age(dob) {
+    var diff_ms = Date.now() - dob.getTime();
+    var age_dt = new Date(diff_ms);
+
+    return Math.abs(age_dt.getUTCFullYear() - 1970);
+}
+
+const ShowCard = ({id, image, name, status, date, rating, type=1, country, countryCode}) => {
   const navigate = useNavigate()
   return (
     <>
@@ -59,6 +68,7 @@ const ShowCard = ({id, image, name, status, date, rating, type=1}) => {
         <CardSubTitle><b>Status</b> {status === "Ended" ? "Completed" : "Ongoing"}</CardSubTitle>
         <CardSubTitle><b>Premiered</b> {date}</CardSubTitle>
       </CardContainer>)}
+
       {!type && (<PeopleModal id={id}>
           <img
             style={{borderRadius: "10px"}}
@@ -66,7 +76,20 @@ const ShowCard = ({id, image, name, status, date, rating, type=1}) => {
             alt={name}
           />
 
-      <CardTitle>{name}</CardTitle>
+        <CardTitle>{name}</CardTitle>
+        <CardSubTitle><b>Age</b>{calculate_age(new Date(date))}</CardSubTitle>
+        <CardSubTitle><b>Country</b>{country}
+          <ReactCountryFlag
+            className="emojiFlag"
+            countryCode={countryCode}
+            style={{
+                fontSize: '1em',
+                lineHeight: '1em',
+                margin: '2px',
+            }}
+            aria-label={country}
+          />
+        </CardSubTitle>
       </PeopleModal>)}
     </>
 

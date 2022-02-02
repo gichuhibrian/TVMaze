@@ -1,12 +1,22 @@
 import React from 'react';
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
+import Button from '@mui/material/Button';
 
-const SiteHeader = styled.span`
+
+const HeaderItem = styled.span`
+  margin-right: 200px;
+  @media (max-width: 1000px) {
+    margin-right: 10px;
+  }
+`;
+
+const SiteHeader = styled.div`
   width: 100%;
   cursor: pointer;
   position: fixed;
   display: flex;
+  flex-direction: row;
   justify-content: center;
   text-transform: uppercase;
   background-color: #39445a;
@@ -27,7 +37,14 @@ const Header = () => {
   const navigate = useNavigate()
 
 return (
-  <SiteHeader onClick={() => navigate('/')}>Tv-Maze</SiteHeader>
+  <SiteHeader onClick={() => navigate('/')}>
+    <HeaderItem>
+      <Button variant="outlined" color="inherit">Search</Button>
+    </HeaderItem>
+    <HeaderItem>
+      Tv Maze
+    </HeaderItem>
+  </SiteHeader>
 );
-} 
+}
 export default Header;

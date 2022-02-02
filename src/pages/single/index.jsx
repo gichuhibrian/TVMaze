@@ -121,7 +121,6 @@ const SingleShow = () => {
     try {
       const { data } = await axios.get(`https://api.tvmaze.com/shows/${showId}/images`)
       setGallery(data)
-      console.log('gallery', data)
     } catch (error) {
       console.error(error);
     }
