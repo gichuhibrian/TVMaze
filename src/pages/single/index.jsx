@@ -19,7 +19,7 @@ import axios from 'axios'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
 
-const CardContainer = styled.div`
+const ImageContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 200px;
@@ -38,6 +38,12 @@ const CardContainer = styled.div`
   @media(max-width:550px) {
     width: 46%;
   }
+`;
+
+const GalleryContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 `;
 
 const ExtraContainer = styled.div`
@@ -124,6 +130,7 @@ const SingleShow = () => {
   const [searchText, setSearchText] = useState("");
   const [show, setShow] = useState([])
   const [episodes, setEpisodes] = useState([])
+  const [gallery, setGallery] = useState([])
 
   const {showId} = useParams()
 
@@ -131,7 +138,6 @@ const SingleShow = () => {
     try {
       const { data } = await axios.get(`https://api.tvmaze.com/shows/${showId}`)
       setShow(data)
-      console.log('data', data)
     } catch (error) {
       console.error(error);
     }
@@ -141,7 +147,16 @@ const SingleShow = () => {
     try {
       const { data } = await axios.get(`https://api.tvmaze.com/shows/${showId}/episodes`)
       setEpisodes(data)
-      console.log('episodes', data)
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const fetchGallery = async () => {
+    try {
+      const { data } = await axios.get(`https://api.tvmaze.com/shows/${showId}/images`)
+      setGallery(data)
+      console.log('gallery', data)
     } catch (error) {
       console.error(error);
     }
@@ -151,6 +166,7 @@ const SingleShow = () => {
   useEffect(() => {
     fetchShow();
     fetchEpisodes();
+    fetchGallery();
     // eslint-disable-next-line
   }, [type]);
 
@@ -166,8 +182,9 @@ const SingleShow = () => {
           }}
           style={{paddingBottom: 5}}
         >
-          <Tab style={{ width: "50%" }} label="Show Information" />
-          <Tab style={{ width: "50%" }} label="Episodes" />
+          <Tab style={{ width: "33%" }} label="Show Information" />
+          <Tab style={{ width: "33%" }} label="Episodes" />
+          <Tab style={{ width: "33%" }} label="Gallery" />
         </Tabs>
       </ThemeProvider>
 
@@ -239,7 +256,7 @@ const SingleShow = () => {
             <Carousel id={showId}/>
           </div>
         </div>
-      </div>): (
+      </div>): type === 1 ? (
       <div style={{ height: 600, width: '100%', backgroundColor: '#fff' }}>
         <DataGrid
           rows={episodes}
@@ -249,7 +266,19 @@ const SingleShow = () => {
           checkboxSelection
         />
       </div>
-      )}
+    ): (
+      <GalleryContainer>
+        {gallery && gallery.map(({resolutions}, index) => (
+          <ImageContainer key={index}>
+              <img
+                style={{borderRadius: "10px"}}
+                src={resolutions && resolutions.original && resolutions.original.url ? `${resolutions.original.url}` : `${unavailable}`}
+                alt={`${resolutions.original.url}`}
+              />
+          </ImageContainer>
+        ))}
+      </GalleryContainer>
+    )}
 
     </div>
 
