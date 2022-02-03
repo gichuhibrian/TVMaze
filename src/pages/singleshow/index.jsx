@@ -13,6 +13,8 @@ import Tabs from '@mui/material/Tabs';
 import axios from 'axios'
 import styled from 'styled-components'
 import { useParams } from 'react-router-dom'
+import Button from '@mui/material/Button';
+
 
 const ImageContainer = styled.div`
   display: flex;
@@ -64,7 +66,7 @@ const darkTheme = createTheme({
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
   {
-    field: 'image.medium',
+    field: 'image',
     headerName: 'Image',
     width: 200,
     valueGetter: (params) =>
@@ -88,6 +90,13 @@ const columns = [
     field: 'actions',
     headerName: 'Action',
     width: 150,
+    customBodyRenderLite: (dataIndex, rowIndex) => {
+            return (
+              <button onClick={() => window.alert(`Clicked "Edit" for row ${rowIndex} with dataIndex of ${dataIndex}`)}>
+                Edit
+              </button>
+            );
+          }
   },
 ];
 
@@ -212,7 +221,7 @@ const SingleShow = () => {
           </ExtraContainer>
 
           <span className="ContentModal__description">
-            {show.summary}
+            {show.summary && show.summary.replace(/(<([^>]+)>)/gi, "")}
           </span>
 
           <div>
@@ -227,7 +236,6 @@ const SingleShow = () => {
           columns={columns}
           pageSize={13}
           rowsPerPageOptions={[5]}
-          checkboxSelection
         />
       </div>
     ): (

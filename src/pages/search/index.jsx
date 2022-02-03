@@ -37,14 +37,17 @@ const Search = () => {
   const [searchText, setSearchText] = useState("");
   const [tvShows, setTvShows] = useState([])
   const [people, setPeople] = useState([])
+  const [noContent, setNoContent] = useState(false)
 
   const fetchSearch = async () => {
     try {
       const { data } = await axios.get(`https://api.tvmaze.com/search/${type ? "people" : "shows"}?q=${searchText}`)
       if(type === 0) {
+        if (data && data.length === 0) setNoContent(true);
         setTvShows(data)
       }
       else if(type === 1) {
+        if (data && data.length === 0) setNoContent(true);
         setPeople(data)
       }
     } catch (error) {
@@ -55,8 +58,10 @@ const Search = () => {
   const CleanUp = () => {
     setTvShows([])
     setPeople([])
-
+    setNoContent(false)
   }
+
+  const isEmpty = !tvShows || tvShows.length === 0;
 
   useEffect(() => {
     window.scroll(0, 0);
@@ -78,7 +83,6 @@ const Search = () => {
           />
           <Button
             onClick={() => {
-              CleanUp()
               fetchSearch()
             }}
             variant='contained'
@@ -100,6 +104,11 @@ const Search = () => {
           <Tab style={{ width: "50%" }} label="Search People" />
         </Tabs>
       </ThemeProvider>
+        {!noContent && isEmpty &&(
+          <ResultContainer>
+            <p>No Result Found</p>
+          </ResultContainer>
+        )}
         {type === 0 ? (
           <ResultContainer>
             {tvShows && tvShows.map(({show}, index) => (
