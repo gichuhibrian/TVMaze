@@ -104,9 +104,9 @@ const Search = () => {
           <Tab style={{ width: "50%" }} label="Search People" />
         </Tabs>
       </ThemeProvider>
-        {!noContent && isEmpty &&(
+        {searchText === "" && (
           <ResultContainer>
-            <p>No Result Found</p>
+            <p>Type to search</p>
           </ResultContainer>
         )}
         {type === 0 ? (

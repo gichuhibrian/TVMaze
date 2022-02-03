@@ -65,38 +65,31 @@ const darkTheme = createTheme({
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
-  {
-    field: 'image',
-    headerName: 'Image',
-    width: 200,
-    valueGetter: (params) =>
-      `${params.row.image.medium}`
-  },
   { field: 'name', headerName: 'Name', width: 230 },
-  { field: 'season', headerName: 'Season', width: 130 },
+  { field: 'season', headerName: 'Season', width: 80 },
   {
     field: 'airdate',
     headerName: 'Air Date',
     width: 150,
   },
   {
+    field: 'airtime',
+    headerName: 'Air Time',
+    width: 100,
+  },
+  {
     field: 'rating',
     headerName: 'Rating',
     width: 90,
     valueGetter: (params) =>
-      `${params.row.rating.average}`
+      `${params.row.rating && params.row.rating.average}`
   },
   {
-    field: 'actions',
-    headerName: 'Action',
-    width: 150,
-    customBodyRenderLite: (dataIndex, rowIndex) => {
-            return (
-              <button onClick={() => window.alert(`Clicked "Edit" for row ${rowIndex} with dataIndex of ${dataIndex}`)}>
-                Edit
-              </button>
-            );
-          }
+    field: 'summary',
+    headerName: 'Details',
+    width: 400,
+    valueGetter: (params) =>
+    `${params.row && params.row.summary.replace(/(<([^>]+)>)/gi, "")}`
   },
 ];
 
@@ -120,6 +113,7 @@ const SingleShow = () => {
   const fetchEpisodes = async () => {
     try {
       const { data } = await axios.get(`https://api.tvmaze.com/shows/${showId}/episodes`)
+      console.log('episodes', data)
       setEpisodes(data)
     } catch (error) {
       console.error(error);
